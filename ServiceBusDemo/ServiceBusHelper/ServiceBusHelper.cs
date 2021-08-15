@@ -103,56 +103,65 @@ namespace ServiceBusHelper
 
         #region Sending Messages
 
-        public static async Task SendMessageAsync<T>(TypeOfContainer typeOfContainer,string pathName, List<T> messages, AdditionalProperties properties)
+        public static async Task SendMessageAsync<T>(TypeOfContainer typeOfContainer,string pathName, List<T> messages, AdditionalProperties properties=null)
         {
-            QueueClient queueClient = null;
-            TopicClient topicClient = null;
-            string sessionID = (properties != null && !string.IsNullOrEmpty(properties.SessionID))? properties.SessionID : string.Empty;
-            switch (typeOfContainer)
+            try
             {
-                case TypeOfContainer.Queue:
-                    queueClient = new QueueClient(_connectionString, pathName);
-                    break;
-                case TypeOfContainer.Topic:
-                    topicClient = new TopicClient(_connectionString, pathName);
-                    break;
-              
-                default:
-                    break;
-            }
-
-            List<Message> messageBatch = new List<Message>();
-
-            foreach(var message in messages)
-            {
-                string messageBody = JsonConvert.SerializeObject(message);
-                var encodedmsg = new Message(Encoding.UTF8.GetBytes(messageBody));
-
-                if(properties?.UserProperties != null)
+                QueueClient queueClient = null;
+                TopicClient topicClient = null;
+                string sessionID = (properties != null && !string.IsNullOrEmpty(properties.SessionID)) ? properties.SessionID : string.Empty;
+                switch (typeOfContainer)
                 {
-                    foreach(var userProperty in properties.UserProperties)
-                    {
-                        encodedmsg.UserProperties.Add(userProperty.Key, userProperty.Value);
-                    }
+                    case TypeOfContainer.Queue:
+                        queueClient = new QueueClient(_connectionString, pathName);
+                        break;
+                    case TypeOfContainer.Topic:
+                        topicClient = new TopicClient(_connectionString, pathName);
+                        break;
+
+                    default:
+                        break;
                 }
 
-                messageBatch.Add(encodedmsg);
-            }
+                List<Message> messageBatch = new List<Message>();
 
-            switch (typeOfContainer)
-            {
-                case TypeOfContainer.Queue:
-                    await queueClient.SendAsync(messageBatch);
-                    await queueClient.CloseAsync();
-                    break;
-                case TypeOfContainer.Topic:
-                    await topicClient.SendAsync(messageBatch);
-                    await topicClient.CloseAsync();
-                    break;
-               
-                default:
-                    break;
+                foreach (var message in messages)
+                {
+                    string messageBody = JsonConvert.SerializeObject(message);
+                    var encodedmsg = new Message(Encoding.UTF8.GetBytes(messageBody));
+
+                    if (properties?.UserProperties != null)
+                    {
+                        foreach (var userProperty in properties.UserProperties)
+                        {
+                            encodedmsg.UserProperties.Add(userProperty.Key, userProperty.Value);
+                        }
+                    }
+
+                    encodedmsg.SessionId = sessionID;
+                    messageBatch.Add(encodedmsg);
+                }
+
+                switch (typeOfContainer)
+                {
+                    case TypeOfContainer.Queue:
+                        await queueClient.SendAsync(messageBatch);
+                        await queueClient.CloseAsync();
+                        break;
+                    case TypeOfContainer.Topic:
+                        await topicClient.SendAsync(messageBatch);
+                        await topicClient.CloseAsync();
+                        break;
+
+                    default:
+                        break;
+                }
             }
+            catch(Exception ex)
+            {
+
+            }
+            
 
 
         }

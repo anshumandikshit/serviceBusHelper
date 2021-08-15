@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusHelper", "ServiceBusHelper\ServiceBusHelper.csproj", "{081A3E2D-7DB0-48A6-8BBA-116BDDD7CED1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceBusHelper", "ServiceBusHelper\ServiceBusHelper.csproj", "{081A3E2D-7DB0-48A6-8BBA-116BDDD7CED1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageServiceBusFunctionApp", "ManageServiceBusFunctionApp\ManageServiceBusFunctionApp.csproj", "{41DF95FA-E98C-49F0-99CA-E20C2DC2D3D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManageServiceBusFunctionApp", "ManageServiceBusFunctionApp\ManageServiceBusFunctionApp.csproj", "{41DF95FA-E98C-49F0-99CA-E20C2DC2D3D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
